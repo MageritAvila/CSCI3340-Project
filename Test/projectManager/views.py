@@ -3,5 +3,5 @@ from django.http import HttpResponse
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the Project Manager index.")
+    return HttpResponse("This will be the Project Manager index. Can be login/signup page or dashboard, not sure yet.")
 # Create your views here.
