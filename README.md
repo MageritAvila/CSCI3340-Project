@@ -1,0 +1,7 @@
+# CSCI3340-Project
+
+Group Members: Magerit Avila, John Reyes
+
+Project Description: This app is a to-do bulletin board for coworkers. Users will utilize this application to post tasks needing to be done within larger projects. Faculty can also decide to delete or update a task if there is need for change. The user will be able to store multiple projects, each with different tasks that are catered to those specific projects. Users are able to pick up multiple tasks within a project; however, they cannot pick up task from another project until all tasks in their current project have been completed. Task must have a due date, title, description, and optionally an icon to be published. The optional icon will determine whether the task is urgent or not.  Tasks will have a different color based on their status. Grey means unclaimed, yellow means in progress, green means completed, and red means overdue. Users must create an account before claiming a task to ensure who will be preforming the task. This project will follow CRUD allowing users to create, read, update and delete.
+
+<img width="2134" height="1522" alt="image" src="https://github.com/user-attachments/assets/56b6b3f8-059d-45c0-b3d0-748ab00c9cad" />
