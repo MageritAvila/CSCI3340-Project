@@ -4,9 +4,11 @@ from django.shortcuts import render
 def home(request):
 	return render(request, 'home.html',{})
 
+def dashboard(request, user_id):
+	return render(request, 'dashboard.html',{'user_id': user_id})
 
-# def index(request):
-#    return HttpResponse("This will be the Project Manager index. Can be login/signup page with link to dashboard.")
+def login(request):
+	return render(request, 'login.html',{})
 
-#def dashboard(request):
-#    return HttpResponse("This will be the Project Manager dashboard, showing projects and tasks.")
+def signup(request):
+	return render(request, 'signup.html',{})
