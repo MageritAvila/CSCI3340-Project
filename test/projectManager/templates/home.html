@@ -1,66 +1,115 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>CSCI3340Project</title>
-</head>
-<body style="background-color: #8B7355;" >
-	<br/>
-	<h3 align = "center">
-    	<font face = "title" size = "5">To-Do Bulletin</font>
-        
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        
-        
-        <font face = "hyper" size = "4" >
-        	<a href="login.html">Sign In</a>
-            <a href="signup.html">Sign Up</a>
-        
-    </h3>
-    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-    <h1 align = "center">
-    	<font face = "welcome" size = "10" > Welcome!</font>
-    </h1>
-    <h3 align = "center">
-    	<font face = "message" size = "8" > Sign In to Begin</font>
-    </h3>
+<meta charset="UTF-8">
+<title>CSCI3340Project</title>
 
-    <form onsubmit="login(event)" align="center">
-    <input type="text" id="username" placeholder="Username" required><br><br>
-    <input type="password" id="password" placeholder="Password" required><br><br>
-    <button type="submit">Login</button>
-</form>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
 
-<script>
-function login(event) {
-    event.preventDefault(); // stop page refresh
-    
-    // fake validation (replace with real backend later)
-    let user = document.getElementById("username").value;
-    let pass = document.getElementById("password").value;
-
-    if(user && pass){
-        window.location.href = "dashboard.html"; // redirect
-    } else {
-        alert("Invalid login");
+        /* ===== BACKGROUND IMAGE ===== */
+        background-image: url("{% static 'images/pexels-icon0-479444.jpg' %}");;
+        background-size: cover;        /* makes image fill screen */
+        background-position: center;   /* keeps it centered */
+        background-repeat: no-repeat;  /* prevents tiling */
+        height: 100vh;
     }
-}
-</script>
-    
-    
+
+    /* Optional overlay effect for readability */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.35); /* dark overlay */
+        z-index: -1;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 30px;
+        background-color: rgba(111, 90, 68, 0.9);
+    }
+
+    .nav-left {
+        font-size: 24px;
+        font-weight: bold;
+        color: black;
+    }
+
+    .nav-right {
+        display: flex;
+        gap: 10px;
+    }
+
+    .nav-btn {
+        padding: 8px 15px;
+        font-size: 14px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #3b2f26;
+        color: white;
+    }
+
+    .nav-btn:hover {
+        background-color: #2a211b;
+    }
+
+    /* ===== CENTER CONTENT ===== */
+    .center-content {
+        height: calc(100vh - 80px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: white; /* better contrast on image */
+    }
+
+    .center-content h1 {
+        font-size: 60px;
+        margin-bottom: 10px;
+    }
+
+    .center-content h3 {
+        font-size: 30px;
+        margin: 0;
+    }
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="nav-left">Project Manager</div>
+
+    <div class="nav-right">
+        <button class="nav-btn" onclick="location.href='login.html'">
+            Sign In
+        </button>
+
+        <button class="nav-btn" onclick="location.href='signup.html'">
+            Sign Up
+        </button>
+    </div>
+</div>
+
+<!-- WELCOME CONTENT -->
+<div class="center-content">
+    <h1>Welcome!</h1>
+    <h3>Sign In to Begin</h3>
+</div>
+
 </body>
 </html>
