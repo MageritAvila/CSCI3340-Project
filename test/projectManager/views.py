@@ -25,6 +25,10 @@ def login(request):
 
     return render(request, 'login.html', {})
 
+def logout(request):
+    auth.logout(request)
+    return redirect("home")
+
 def signup(request):
     if request.method == "POST":
         full_name = request.POST.get("full_name", "").strip()
@@ -70,3 +74,4 @@ def signup(request):
         })
 
     return render(request, "signup.html", {})
+
