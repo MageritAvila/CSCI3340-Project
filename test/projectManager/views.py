@@ -1,5 +1,3 @@
-from django.shortcuts import render
-from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -43,12 +41,11 @@ def signup(request):
 
         if not errors:
             user = User.objects.create_user(
-                name = full_name,
                 username=username,
                 email=email,
                 password=password,
+                first_name=full_name,
             )
-            user.name = full_name
             user.save()
 
             messages.success(request, "Account created successfully. Please sign in.")
