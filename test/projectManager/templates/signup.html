@@ -1,0 +1,189 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up - Project Manager</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(rgba(12, 34, 56, 0.75), rgba(12, 34, 56, 0.75)), url("{% static 'images/pexels-icon0-479444.jpg' %}") center/cover no-repeat;
+            min-height: 100vh;
+            color: #eef3ff;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 30px;
+            background-color: rgba(10, 24, 46, 0.88);
+        }
+
+        .nav-brand {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-link {
+            color: #eef3ff;
+            text-decoration: none;
+            border: 1px solid rgba(238, 243, 255, 0.25);
+            padding: 10px 16px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(238, 243, 255, 0.12);
+            border-color: rgba(238, 243, 255, 0.48);
+        }
+
+        .page-shell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 76px);
+            padding: 24px;
+        }
+
+        .signup-card {
+            width: 100%;
+            max-width: 520px;
+            background: rgba(4, 16, 36, 0.94);
+            border: 1px solid rgba(238, 243, 255, 0.12);
+            border-radius: 20px;
+            box-shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
+            padding: 38px 36px;
+        }
+
+        .signup-card h1 {
+            margin: 0 0 8px;
+            font-size: 34px;
+            letter-spacing: -0.4px;
+        }
+
+        .signup-card p.description {
+            margin: 0 0 28px;
+            color: #cbd6eb;
+            line-height: 1.7;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #9fb3dc;
+        }
+
+        .field input {
+            width: 100%;
+            border: 1px solid rgba(238, 243, 255, 0.13);
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #f8fbff;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .field input:focus {
+            border-color: #84a3ff;
+            box-shadow: 0 0 0 4px rgba(132, 163, 255, 0.14);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px 18px;
+            border: none;
+            border-radius: 14px;
+            background-color: #5a8cff;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.15s ease, background-color 0.15s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #3d6fd5;
+            transform: translateY(-1px);
+        }
+
+        .login-link {
+            margin-top: 22px;
+            font-size: 14px;
+            color: #cbd6eb;
+            text-align: center;
+        }
+
+        .login-link a {
+            color: #aac4ff;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-brand">Project Manager</div>
+        <div class="nav-links">
+            <a class="nav-link" href="{% url 'home' %}">Home</a>
+            <a class="nav-link" href="{% url 'login' %}">Sign In</a>
+        </div>
+    </div>
+
+    <div class="page-shell">
+        <div class="signup-card">
+            <h1>Create your account</h1>
+            <p class="description">Sign up to manage your projects, assign tasks, and collaborate with your team from one central dashboard.</p>
+
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="field">
+                    <label for="full_name">Full name</label>
+                    <input id="full_name" name="full_name" type="text" placeholder="Jane Doe" required>
+                </div>
+
+                <div class="field">
+                    <label for="email">Email address</label>
+                    <input id="email" name="email" type="email" placeholder="you@example.com" required>
+                </div>
+
+                <div class="field">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" type="text" placeholder="project.manager" required>
+                </div>
+
+                <div class="field">
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" placeholder="Enter a strong password" required>
+                </div>
+
+                <div class="field">
+                    <label for="confirm_password">Confirm password</label>
+                    <input id="confirm_password" name="confirm_password" type="password" placeholder="Repeat password" required>
+                </div>
+
+                <button class="submit-btn" type="submit">Sign Up</button>
+            </form>
+
+            <p class="login-link">Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+        </div>
+    </div>
+</body>
+</html>

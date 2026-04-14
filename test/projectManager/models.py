@@ -29,6 +29,7 @@ class Project(models.Model):
         return self.name
 
 class User(models.Model):
+    name = models.CharField(max_length=200)
     username = models.CharField(max_length=150, unique=True)
     email = models.EmailField(unique=True)
     projects = models.ManyToManyField(Project)
