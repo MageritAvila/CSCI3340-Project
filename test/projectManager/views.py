@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib import messages
+from django.contrib import messages, auth
 from django.contrib.auth import get_user_model
 # from django.http import HttpResponse
 
@@ -8,11 +8,22 @@ User = get_user_model()
 def home(request):
 	return render(request, 'home.html',{})
 
-def dashboard(request, user_id):
-	return render(request, 'dashboard.html',{'user_id': user_id})
+def dashboard(request, username):
+	return render(request, 'dashboard.html',{'username': username})
 
 def login(request):
-	return render(request, 'login.html',{})
+    if request.method == "POST":
+        username = request.POST.get("username", "").strip()
+        password = request.POST.get("password", "")
+
+        user = auth.authenticate(username=username, password=password)
+        if user is not None:
+            auth.login(request, user)
+            return redirect("dashboard", username=username)
+        else:
+            messages.error(request, "Invalid username or password.")
+
+    return render(request, 'login.html', {})
 
 def signup(request):
     if request.method == "POST":

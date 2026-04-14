@@ -1,0 +1,189 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign In - Project Manager</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(rgba(12, 34, 56, 0.75), rgba(12, 34, 56, 0.75)), url("{% static 'images/pexels-icon0-479444.jpg' %}") center/cover no-repeat;
+            min-height: 100vh;
+            color: #eef3ff;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 30px;
+            background-color: rgba(10, 24, 46, 0.88);
+        }
+
+        .nav-brand {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-link {
+            color: #eef3ff;
+            text-decoration: none;
+            border: 1px solid rgba(238, 243, 255, 0.25);
+            padding: 10px 16px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(238, 243, 255, 0.12);
+            border-color: rgba(238, 243, 255, 0.48);
+        }
+
+        .page-shell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 76px);
+            padding: 24px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 520px;
+            background: rgba(4, 16, 36, 0.94);
+            border: 1px solid rgba(238, 243, 255, 0.12);
+            border-radius: 20px;
+            box-shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
+            padding: 38px 36px;
+        }
+
+        .login-card h1 {
+            margin: 0 0 8px;
+            font-size: 34px;
+            letter-spacing: -0.4px;
+        }
+
+        .login-card p.description {
+            margin: 0 0 28px;
+            color: #cbd6eb;
+            line-height: 1.7;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #9fb3dc;
+        }
+
+        .field input {
+            width: 100%;
+            border: 1px solid rgba(238, 243, 255, 0.13);
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #f8fbff;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .field input:focus {
+            border-color: #84a3ff;
+            box-shadow: 0 0 0 4px rgba(132, 163, 255, 0.14);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px 18px;
+            border: none;
+            border-radius: 14px;
+            background-color: #5a8cff;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.15s ease, background-color 0.15s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #3d6fd5;
+            transform: translateY(-1px);
+        }
+
+        .signup-link {
+            margin-top: 22px;
+            font-size: 14px;
+            color: #cbd6eb;
+            text-align: center;
+        }
+
+        .signup-link a {
+            color: #aac4ff;
+            text-decoration: none;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #ffcccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-brand">Project Manager</div>
+        <div class="nav-links">
+            <a class="nav-link" href="{% url 'home' %}">Home</a>
+            <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
+        </div>
+    </div>
+
+    <div class="page-shell">
+        <div class="login-card">
+            <h1>Sign in to your account</h1>
+            <p class="description">Enter your credentials to access your project dashboard.</p>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="messages">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="field">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" type="text" placeholder="Enter your username" required>
+                </div>
+
+                <div class="field">
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" placeholder="Enter your password" required>
+                </div>
+
+                <button class="submit-btn" type="submit">Sign In</button>
+            </form>
+
+            <p class="signup-link">Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
+        </div>
+    </div>
+</body>
+</html>
