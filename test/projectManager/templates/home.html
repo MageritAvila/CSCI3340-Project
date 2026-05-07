@@ -11,12 +11,9 @@
         font-family: Arial, sans-serif;
 
         /* Background image */
-        background-image: url("{% static 'images/pexels-icon0-479444.jpg' %}");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        height: 100vh;
-    }
+        background: linear-gradient(rgba(12, 34, 56, 0.75), rgba(12, 34, 56, 0.75)), url("{% static 'images/pexels-icon0-479444.jpg' %}") center/cover no-repeat;
+        min-height: 100vh;
+        color: #eef3ff;    }
 
     /* ===== NAVBAR ===== */
     .navbar {
@@ -24,13 +21,13 @@
         justify-content: space-between;
         align-items: center;
         padding: 20px 30px;
-        background-color: rgba(111, 90, 68, 0.9);
+        background-color: rgba(10, 24, 46, 0.88);
     }
 
     .nav-left {
         font-size: 24px;
         font-weight: bold;
-        color: black;
+        color: #eef3ff;
     }
 
     .nav-right {
@@ -39,17 +36,19 @@
     }
 
     .nav-btn {
-        padding: 8px 15px;
-        font-size: 14px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        background-color: #3b2f26;
-        color: white;
+        color: #eef3ff;
+        border: 1px solid rgba(238, 243, 255, 0.25);
+        background:transparent;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-size:14px;
+        cursor:pointer;
+
     }
 
     .nav-btn:hover {
-        background-color: #2a211b;
+        background-color: rgba(238, 243, 255, 0.12);
+        border-color: rgba(238, 243, 255, 0.48);
     }
 
     /* ===== CENTER CONTENT ===== */
@@ -66,12 +65,15 @@
     .center-content h1 {
         font-size: 60px;
         margin-bottom: 10px;
+        color: #eef3ff;
     }
 
     .center-content h3 {
         font-size: 30px;
         margin: 0;
+        color: #cbd6eb;
     }
+
 </style>
 </head>
 
