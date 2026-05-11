@@ -370,6 +370,12 @@
                                             <input type="hidden" name="task_id" value="{{ task.id }}">
                                             <button class="action-btn" type="submit" style="width:100%;">{% if task.is_complete %}Mark incomplete{% else %}Mark complete{% endif %}</button>
                                         </form>
+                                        <form method="post" action="{% url 'project_detail' project.id %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="action" value="unclaim_task">
+                                            <input type="hidden" name="task_id" value="{{ task.id }}">
+                                            <button class="action-btn" type="submit" style="width:100%; background: rgba(255, 99, 71, 0.7);">Unclaim</button>
+                                        </form>
                                     {% elif not task.is_full %}
                                         <form method="post" action="{% url 'project_detail' project.id %}">
                                             {% csrf_token %}
@@ -378,7 +384,7 @@
                                             <button class="action-btn" type="submit" style="width:100%;">Claim task</button>
                                         </form>
                                     {% else %}
-                                        <span class="small-note">Task full</span>
+                                        <span class="small-note" style="text-align: center; padding: 10px; background: rgba(255, 255, 255, 0.05); border-radius: 8px;">Task full</span>
                                     {% endif %}
                                 </div>
                             </li>

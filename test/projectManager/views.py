@@ -233,6 +233,24 @@ def project_detail(request, project_id):
             else:
                 messages.error(request, "Invalid task selection.")
 
+        elif action == 'unclaim_task':
+            task_id = request.POST.get('task_id')
+            if task_id:
+                try:
+                    task = Task.objects.get(id=task_id)
+                    if task not in project.tasks.all():
+                        messages.error(request, "This task does not belong to the current project.")
+                    elif request.user not in task.claimed_by.all():
+                        messages.error(request, "You haven't claimed this task.")
+                    else:
+                        task.claimed_by.remove(request.user)
+                        messages.success(request, f"You unclaimed '{task.name}'.")
+                        return redirect('project_detail', project_id=project.id)
+                except Task.DoesNotExist:
+                    messages.error(request, "Task not found.")
+            else:
+                messages.error(request, "Invalid task selection.")
+
         elif action == 'toggle_task_done':
             task_id = request.POST.get('task_id')
             if task_id:
@@ -240,14 +258,14 @@ def project_detail(request, project_id):
                     task = Task.objects.get(id=task_id)
                     if task not in project.tasks.all():
                         messages.error(request, "This task does not belong to the current project.")
-                    elif request.user in task.claimed_by.all() or request.user == project.creator:
+                    elif request.user not in task.claimed_by.all() and request.user != project.creator:
+                        messages.error(request, "Only users who claimed this task or the project creator can mark it complete.")
+                    else:
                         task.is_complete = not task.is_complete
                         task.save()
                         status = 'completed' if task.is_complete else 'marked incomplete'
                         messages.success(request, f"Task '{task.name}' {status}.")
                         return redirect('project_detail', project_id=project.id)
-                    else:
-                        messages.error(request, "Only users who claimed this task can mark it complete.")
                 except Task.DoesNotExist:
                     messages.error(request, "Task not found.")
             else:
