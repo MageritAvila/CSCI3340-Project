@@ -224,6 +224,15 @@
         font-size: 13px;
         margin-top: 10px;
     }
+
+    h3{
+        color: #cbd6eb;
+    }
+
+    a{
+        text-decoration: none;
+    }
+
 </style>
 
 <div class="project-shell">
@@ -241,6 +250,7 @@
         </div>
         <div class="project-header-right">
             <div class="badge">Project viewer</div>
+            <a class="badge" href="{% url 'dashboard' user.username %}" > Dashboard </a>
             <div class="small-note">Use the board, add tasks, and invite collaborators.</div>
         </div>
     </div>
