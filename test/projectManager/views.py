@@ -1,15 +1,31 @@
+import datetime
+
 from django.shortcuts import render, redirect
 from django.contrib import messages, auth
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 # from django.http import HttpResponse
+
+from .models import Project, Comment, Task
 
 User = get_user_model()
 
 def home(request):
 	return render(request, 'home.html',{})
 
+@login_required(login_url='login')
 def dashboard(request, username):
-	return render(request, 'dashboard.html',{'username': username})
+    if request.user.username != username:
+        return redirect('dashboard', username=request.user.username)
+
+    projects = Project.objects.filter(creator=request.user)
+    shared_projects = request.user.shared_projects.all()
+    return render(request, 'dashboard.html', {
+        'username': username,
+        'projects': projects,
+        'shared_projects': shared_projects,
+    })
 
 def login(request):
     if request.method == "POST":
@@ -74,4 +90,173 @@ def signup(request):
         })
 
     return render(request, "signup.html", {})
+
+@login_required(login_url='login')
+def create_project(request):
+    if request.method == "POST":
+        name = request.POST.get("name", "").strip()
+        description = request.POST.get("description", "").strip()
+
+        if not name:
+            messages.error(request, "Project name is required.")
+        else:
+            Project.objects.create(
+                name=name,
+                description=description,
+                creator=request.user
+            )
+            messages.success(request, f"Project '{name}' created successfully.")
+            return redirect("dashboard", username=request.user.username)
+
+    return render(request, "projectCreation.html", {})
+
+@login_required(login_url='login')
+def project_detail(request, project_id):
+    project = Project.objects.get(id=project_id)
+
+    if request.user != project.creator and request.user not in project.shared_with.all():
+        messages.error(request, "You do not have access to this project.")
+        return redirect('dashboard', username=request.user.username)
+
+    if request.method == "POST":
+        action = request.POST.get('action')
+
+        if action == 'add_post':
+            message = request.POST.get('message', '').strip()
+            image_url = request.POST.get('image_url', '').strip()
+
+            if not message and not image_url:
+                messages.error(request, "Add a message or image URL before posting.")
+            else:
+                content = message
+                if image_url:
+                    content = f"IMAGE:{image_url}"
+                    if message:
+                        content += f"\n{message}"
+
+                Comment.objects.create(
+                    user=request.user,
+                    project=project,
+                    content=content,
+                )
+                messages.success(request, "Board post added.")
+                return redirect('project_detail', project_id=project.id)
+
+        elif action == 'share_project':
+            username = request.POST.get('share_username', '').strip()
+            if not username:
+                messages.error(request, "Enter a username to share with.")
+            else:
+                try:
+                    target = User.objects.get(username=username)
+                    if target == project.creator:
+                        messages.error(request, "Project creator already has access.")
+                    else:
+                        project.shared_with.add(target)
+                        messages.success(request, f"Project shared with {username}.")
+                        return redirect('project_detail', project_id=project.id)
+                except User.DoesNotExist:
+                    messages.error(request, "That user does not exist.")
+
+        elif action == 'add_task':
+            task_name = request.POST.get('task_name', '').strip()
+            task_description = request.POST.get('task_description', '').strip()
+            due_date = request.POST.get('due_date', '').strip()
+            max_assignees = request.POST.get('max_assignees', '1').strip()
+
+            if not task_name:
+                messages.error(request, "Task name is required.")
+            else:
+                try:
+                    max_assignees = max(1, int(max_assignees))
+                except ValueError:
+                    max_assignees = 1
+
+                if due_date:
+                    try:
+                        due = datetime.datetime.strptime(due_date, '%Y-%m-%d')
+                    except ValueError:
+                        due = timezone.now()
+                else:
+                    due = timezone.now()
+
+                task = Task.objects.create(
+                    name=task_name,
+                    description=task_description,
+                    due_date=due,
+                    creator=request.user,
+                    max_assignees=max_assignees,
+                )
+                project.tasks.add(task)
+                messages.success(request, f"Task '{task_name}' added to the project.")
+                return redirect('project_detail', project_id=project.id)
+
+        elif action == 'claim_task':
+            task_id = request.POST.get('task_id')
+            if task_id:
+                try:
+                    task = Task.objects.get(id=task_id)
+                    if task not in project.tasks.all():
+                        messages.error(request, "This task does not belong to the current project.")
+                    elif request.user in task.claimed_by.all():
+                        messages.info(request, "You have already claimed this task.")
+                    elif task.is_full:
+                        messages.error(request, "This task already has the maximum number of assignees.")
+                    else:
+                        task.claimed_by.add(request.user)
+                        messages.success(request, f"You claimed '{task.name}'.")
+                        return redirect('project_detail', project_id=project.id)
+                except Task.DoesNotExist:
+                    messages.error(request, "Task not found.")
+            else:
+                messages.error(request, "Invalid task selection.")
+
+        elif action == 'toggle_task_done':
+            task_id = request.POST.get('task_id')
+            if task_id:
+                try:
+                    task = Task.objects.get(id=task_id)
+                    if task not in project.tasks.all():
+                        messages.error(request, "This task does not belong to the current project.")
+                    elif request.user in task.claimed_by.all() or request.user == project.creator:
+                        task.is_complete = not task.is_complete
+                        task.save()
+                        status = 'completed' if task.is_complete else 'marked incomplete'
+                        messages.success(request, f"Task '{task.name}' {status}.")
+                        return redirect('project_detail', project_id=project.id)
+                    else:
+                        messages.error(request, "Only users who claimed this task can mark it complete.")
+                except Task.DoesNotExist:
+                    messages.error(request, "Task not found.")
+            else:
+                messages.error(request, "Invalid task selection.")
+
+    tasks = project.tasks.all()
+    comments_raw = Comment.objects.filter(project=project).order_by('-timestamp')
+    comments = []
+    for comment in comments_raw:
+        content = comment.content or ''
+        image_url = None
+        text = content
+
+        if content.startswith('IMAGE:'):
+            parts = content[6:].split('\n', 1)
+            image_url = parts[0].strip()
+            text = parts[1].strip() if len(parts) > 1 else ''
+
+        comments.append({
+            'author': comment.user,
+            'timestamp': comment.timestamp,
+            'text': text,
+            'image_url': image_url,
+        })
+
+    shared_users = project.shared_with.all()
+
+    return render(request, 'projectDetails.html', {
+        'project': project,
+        'tasks': tasks,
+        'comments': comments,
+        'shared_users': shared_users,
+    })
 

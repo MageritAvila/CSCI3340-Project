@@ -7,8 +7,7 @@ urlpatterns = [
     path("login/", views.login, name="login"),
     path("logout/", views.logout, name="logout"),
     path("signup/", views.signup, name="signup"),
+    path("create_project/", views.create_project, name="create_project"),
+    path("project/<int:project_id>/", views.project_detail, name="project_detail"),
 ]
 
-# urlpatterns = [
-#    path("dashboard/<str:user_id>/", views.dashboard, name="dashboard"),
-#]

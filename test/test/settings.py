@@ -28,6 +28,10 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+
+AUTH_USER_MODEL = 'projectManager.User'
+#Use Django's built in user model for authentication.
+
 # Application definition
 
 INSTALLED_APPS = [

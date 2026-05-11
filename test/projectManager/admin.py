@@ -1,8 +1,10 @@
 from django.contrib import admin
 from .models import User, Project, Task, Comment
+from django.contrib.auth.admin import UserAdmin
+from .models import User
 
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(UserAdmin):
     list_display = ['username', 'email', 'UID']
 
 @admin.register(Project)

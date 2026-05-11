@@ -1,0 +1,398 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(rgba(12, 34, 56, 0.75), rgba(12, 34, 56, 0.75)), url("{% static 'images/pexels-icon0-479444.jpg' %}") center/cover no-repeat;
+        min-height: 100vh;
+        color: #eef3ff;
+    }
+
+    .project-shell {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 40px 24px;
+    }
+
+    .project-header {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 28px;
+    }
+
+    .project-header-left {
+        flex: 1 1 420px;
+    }
+
+    .project-header-right {
+        flex: 0 0 320px;
+    }
+
+    .project-title {
+        margin: 0 0 12px;
+        font-size: 40px;
+    }
+
+    .project-meta {
+        color: #cbd6eb;
+        margin: 0;
+        line-height: 1.7;
+    }
+
+    .board-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 22px;
+    }
+
+    .board-panel,
+    .sidebar-panel {
+        background: rgba(4, 16, 36, 0.94);
+        border: 1px solid rgba(238, 243, 255, 0.12);
+        border-radius: 20px;
+        padding: 26px;
+    }
+
+    .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .panel-title {
+        font-size: 24px;
+        margin: 0;
+    }
+
+    .panel-subtitle {
+        color: #9fb3dc;
+        font-size: 14px;
+        margin: 4px 0 0;
+    }
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 16px;
+        border-radius: 12px;
+        background: #5a8cff;
+        color: #fff;
+        text-decoration: none;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+    }
+
+    .action-btn:hover {
+        background: #3d6fd5;
+    }
+
+    .card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(238, 243, 255, 0.08);
+        border-radius: 18px;
+        padding: 22px;
+        margin-bottom: 20px;
+    }
+
+    .card input,
+    .card textarea,
+    .card select {
+        width: 100%;
+        border: 1px solid rgba(238, 243, 255, 0.16);
+        border-radius: 12px;
+        padding: 12px 14px;
+        background: rgba(255, 255, 255, 0.05);
+        color: #eef3ff;
+        outline: none;
+        margin-top: 10px;
+    }
+
+    .card textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .card label {
+        display: block;
+        font-size: 14px;
+        color: #9fb3dc;
+    }
+
+    .board-entry {
+        display: grid;
+        gap: 14px;
+        margin-bottom: 18px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid rgba(238, 243, 255, 0.08);
+    }
+
+    .board-entry:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .board-entry img {
+        width: 100%;
+        border-radius: 16px;
+        max-height: 320px;
+        object-fit: cover;
+    }
+
+    .board-entry-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #cbd6eb;
+        font-size: 13px;
+    }
+
+    .task-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .task-item {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(238, 243, 255, 0.08);
+        border-radius: 16px;
+        padding: 18px 16px;
+        margin-bottom: 14px;
+    }
+
+    .task-item label {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        flex: 1;
+        margin: 0;
+    }
+
+    .task-item h4 {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .task-item p {
+        margin: 6px 0 0;
+        color: #cbd6eb;
+        font-size: 14px;
+    }
+
+    .share-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .share-chip {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(238, 243, 255, 0.1);
+        border-radius: 999px;
+        padding: 8px 14px;
+        color: #eef3ff;
+        font-size: 14px;
+    }
+
+    .badge {
+        display: inline-flex;
+        gap: 6px;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 999px;
+        padding: 8px 12px;
+        color: #eef3ff;
+        font-size: 13px;
+    }
+
+    .small-note {
+        color: #9fb3dc;
+        font-size: 13px;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="project-shell">
+    <div class="project-header">
+        <div class="project-header-left">
+            <h1 class="project-title">{{ project.name }}</h1>
+            <p class="project-meta">{{ project.description }}</p>
+            <p class="project-meta">Created by {{ project.creator.username }}{% if shared_users %} · shared with {{ shared_users|length }} users{% endif %}</p>
+        </div>
+        <div class="project-header-right">
+            <div class="badge">Project viewer</div>
+            <div class="small-note">Use the board, add tasks, and invite collaborators.</div>
+        </div>
+    </div>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="board-grid">
+        <div class="board-panel">
+            <div class="panel-header">
+                <div>
+                    <h2 class="panel-title">Project Bulletin Board</h2>
+                    <p class="panel-subtitle">Post updates, images, and team notes in one place.</p>
+                </div>
+                <a class="action-btn" href="#tasks">View all tasks</a>
+            </div>
+
+            <div class="card">
+                <h3 class="panel-title">Add Text or Image</h3>
+                <form method="post" action="{% url 'project_detail' project.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="add_post">
+                    <label for="message">Text update</label>
+                    <textarea id="message" name="message" placeholder="Write a quick project update..."></textarea>
+                    <label for="image_url">Image URL</label>
+                    <input id="image_url" name="image_url" type="url" placeholder="https://example.com/image.jpg">
+                    <button class="action-btn" type="submit" style="margin-top: 14px; width: 100%;">Post to board</button>
+                </form>
+            </div>
+
+            <div class="panel-header" style="margin-top: 16px;">
+                <div>
+                    <h2 class="panel-title">Board Activity</h2>
+                    <p class="panel-subtitle">Latest updates from your team.</p>
+                </div>
+            </div>
+
+            {% if comments %}
+                {% for comment in comments %}
+                    <div class="board-entry">
+                        <div class="board-entry-meta">
+                            <span>{{ comment.author.username }}</span>
+                            <span>{{ comment.timestamp|date:'M d, Y H:i' }}</span>
+                        </div>
+                        {% if comment.image_url %}
+                            <img src="{{ comment.image_url }}" alt="Board image">
+                        {% endif %}
+                        {% if comment.text %}
+                            <p>{{ comment.text }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="board-entry">
+                    <p class="small-note">No board posts yet. Start by adding a text update or image.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="sidebar-panel">
+            <div class="panel-header">
+                <div>
+                    <h2 class="panel-title">Tasks & Checklists</h2>
+                    <p class="panel-subtitle">Track task progress and keep work organized.</p>
+                </div>
+            </div>
+
+            <div class="card" id="tasks">
+                <h3 class="panel-title">Add a Task</h3>
+                <form method="post" action="{% url 'project_detail' project.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="add_task">
+                    <label for="task_name">Task name</label>
+                    <input id="task_name" name="task_name" type="text" placeholder="Task title">
+                    <label for="task_description">Task details</label>
+                    <textarea id="task_description" name="task_description" placeholder="What needs to be done?"></textarea>
+                    <label for="due_date">Due date</label>
+                    <input id="due_date" name="due_date" type="date">
+                    <label for="max_assignees">Max assignees</label>
+                    <input id="max_assignees" name="max_assignees" type="number" min="1" value="1">
+                    <button class="action-btn" type="submit" style="margin-top: 14px; width: 100%;">Add task</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3 class="panel-title">Task checklist</h3>
+                {% if tasks %}
+                    <ul class="task-list">
+                        {% for task in tasks %}
+                            <li class="task-item">
+                                <div style="flex:1;">
+                                    <div style="display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:10px;">
+                                        <div>
+                                            <h4>{{ task.name }}</h4>
+                                            <p class="small-note">Due {{ task.due_date|date:'M d, Y' }}</p>
+                                        </div>
+                                        <span class="badge" style="background: rgba(90, 143, 255, 0.18); color: #eef3ff;">{{ task.claimed_by.count }} / {{ task.max_assignees }} claimed</span>
+                                    </div>
+                                    <p>{{ task.description }}</p>
+                                    <p class="small-note">Status: {% if task.is_complete %}Completed{% else %}In progress{% endif %}</p>
+                                    {% if task.claimed_by.count %}
+                                        <p class="small-note">Claimed by: {% for user in task.claimed_by.all %}{{ user.username }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+                                    {% endif %}
+                                </div>
+                                <div style="display:flex; flex-direction:column; gap:10px; min-width: 160px;">
+                                    {% if request.user in task.claimed_by.all %}
+                                        <form method="post" action="{% url 'project_detail' project.id %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="action" value="toggle_task_done">
+                                            <input type="hidden" name="task_id" value="{{ task.id }}">
+                                            <button class="action-btn" type="submit" style="width:100%;">{% if task.is_complete %}Mark incomplete{% else %}Mark complete{% endif %}</button>
+                                        </form>
+                                    {% elif not task.is_full %}
+                                        <form method="post" action="{% url 'project_detail' project.id %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="action" value="claim_task">
+                                            <input type="hidden" name="task_id" value="{{ task.id }}">
+                                            <button class="action-btn" type="submit" style="width:100%;">Claim task</button>
+                                        </form>
+                                    {% else %}
+                                        <span class="small-note">Task full</span>
+                                    {% endif %}
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="small-note">No tasks yet. Use the form above to add one.</p>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h3 class="panel-title">Share this project</h3>
+                <p class="small-note">Grant another user access by username.</p>
+                <form method="post" action="{% url 'project_detail' project.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="share_project">
+                    <label for="share_username">Username</label>
+                    <input id="share_username" name="share_username" type="text" placeholder="username">
+                    <button class="action-btn" type="submit" style="margin-top: 14px; width: 100%;">Share project</button>
+                </form>
+                {% if shared_users %}
+                    <div class="share-list">
+                        {% for user in shared_users %}
+                            <span class="share-chip">{{ user.username }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
