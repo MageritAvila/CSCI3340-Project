@@ -237,6 +237,27 @@
             {% endfor %}
         </ul>
     </div>
+
+    <div class="section">
+        <h2>Upcoming Tasks</h2>
+        <ul class="project-list">
+            {% for item in upcoming_tasks %}
+                <li class="project-item">
+                    <h3>{{ item.task.name }}</h3>
+                    <p>{{ item.task.description }}</p>
+                    <p><strong>Due:</strong> {{ item.task.due_date|date:"M j, Y g:i A" }}</p>
+                    <p><strong>Project:</strong> {{ item.project_name }}</p>
+                    {% if item.task.is_overdue %}
+                        <span class="badge" style="background: rgba(255, 59, 48, 0.1); color: #ff6b6b;">Overdue</span>
+                    {% elif item.task.is_due_soon %}
+                        <span class="badge" style="background: rgba(255, 193, 7, 0.1); color: #ffc107;">Due Soon</span>
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li class="no-projects">No upcoming tasks due within the next week.</li>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
 
 <!-- Create Project Modal -->
