@@ -160,9 +160,31 @@
         background-color: #3d6fd5;
         transform: translateY(-1px);
     }
+
+    .badge {
+        display: inline-flex;
+        gap: 6px;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 999px;
+        padding: 8px 12px;
+        color: #eef3ff;
+        font-size: 13px;
+    }
+
+    a{
+        text-decoration: none;
+    }
+
+
 </style>
 
 <div class="dashboard-content">
+
+    <div class ="logOut">
+    <a href="{% url 'home' %}" class="badge">Logout</a>
+    </div>
+
     <div class="welcome">
         <h1>Welcome, {{ username }}!</h1>
         <p>Manage your projects and collaborate with your team.</p>
