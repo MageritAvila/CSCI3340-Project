@@ -160,6 +160,68 @@
         background-color: #3d6fd5;
         transform: translateY(-1px);
     }
+
+    .task-preview {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(238, 243, 255, 0.1);
+        border-radius: 12px;
+        padding: 18px;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .task-preview-info h4 {
+        margin: 0 0 6px;
+        font-size: 16px;
+        color: #eef3ff;
+    }
+
+    .task-preview-info p {
+        margin: 4px 0;
+        color: #cbd6eb;
+        font-size: 13px;
+    }
+
+    .task-preview-due {
+        background: rgba(90, 143, 255, 0.18);
+        color: #eef3ff;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .task-collapse-btn {
+        display: inline-block;
+        padding: 10px 16px;
+        background-color: #5a8cff;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 12px;
+        transition: background-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .task-collapse-btn:hover {
+        background-color: #3d6fd5;
+        transform: translateY(-1px);
+    }
+
+    .task-preview-hidden {
+        display: none;
+    }
+
+    .task-preview-visible {
+        display: flex;
+    }
+
+
 </style>
 
 <div class="dashboard-content">
@@ -208,6 +270,61 @@
             {% endfor %}
         </ul>
     </div>
+
+    {% if upcoming_tasks %}
+        <div class="section">
+            <h2>Upcoming Tasks</h2>
+            <p style="color: #cbd6eb; margin-bottom: 20px;">Tasks due within the next 7 days ({{ upcoming_tasks|length }} total).</p>
+            {% for item in upcoming_tasks %}
+                <div class="task-preview {% if forloop.counter > 3 %}task-preview-hidden{% endif %}" id="task-{{ item.task.id }}">
+                    <div class="task-preview-info">
+                        <h4>{{ item.task.name }}</h4>
+                        <p>From: <strong>{{ item.project_name }}</strong></p>
+                        {% if item.task.description %}
+                            <p>{{ item.task.description }}</p>
+                        {% endif %}
+                        <p style="color: #9fb3dc;">Status: {% if item.task.is_complete %}<span style="color: #34c759;">Completed</span>{% else %}<span style="color: #ff9500;">In Progress</span>{% endif %}</p>
+                    </div>
+                    <div class="task-preview-due">
+                        Due: {{ item.task.due_date|date:'M d, Y' }}
+                    </div>
+                </div>
+            {% endfor %}
+            
+            {% if upcoming_tasks|length > 3 %}
+                <button class="task-collapse-btn" onclick="toggleTaskList(this)">
+                    Show all {{ upcoming_tasks|length }} tasks
+                </button>
+            {% endif %}
+        </div>
+
+        <script>
+            function toggleTaskList(button) {
+                const taskCount = parseInt(button.textContent.match(/\d+/)[0]);
+                const tasks = document.querySelectorAll('.task-preview');
+                
+                tasks.forEach((task, index) => {
+                    if (index >= 3) {
+                        const isHidden = task.classList.contains('task-preview-hidden');
+                        if (isHidden) {
+                            task.classList.remove('task-preview-hidden');
+                            task.classList.add('task-preview-visible');
+                        } else {
+                            task.classList.add('task-preview-hidden');
+                            task.classList.remove('task-preview-visible');
+                        }
+                    }
+                });
+                
+                const isExpanded = button.textContent.includes('Hide');
+                if (isExpanded) {
+                    button.textContent = `Show all ${taskCount} tasks`;
+                } else {
+                    button.textContent = `Hide extra tasks`;
+                }
+            }
+        </script>
+    {% endif %}
 </div>
 
 <!-- Create Project Modal -->

@@ -54,6 +54,7 @@ class Comment(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)  # Always set
     task = models.ForeignKey(Task, on_delete=models.CASCADE, null=True, blank=True)  # Optional, for task-specific comments
     content = models.TextField()
+    image = models.ImageField(upload_to='comments/', null=True, blank=True)  # Uploaded image
     timestamp = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):

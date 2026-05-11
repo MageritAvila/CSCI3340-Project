@@ -5,6 +5,8 @@ from django.contrib import messages, auth
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.db.models import Q
+from datetime import timedelta
 # from django.http import HttpResponse
 
 from .models import Project, Comment, Task
@@ -21,10 +23,33 @@ def dashboard(request, username):
 
     projects = Project.objects.filter(creator=request.user)
     shared_projects = request.user.shared_projects.all()
+    
+    # Get all projects the user has access to
+    user_projects = projects | shared_projects
+    
+    # Get all tasks that are overdue or due within a week from now
+    one_week_from_now = timezone.now() + timedelta(days=7)
+    upcoming_tasks_qs = Task.objects.filter(
+        project__in=user_projects,
+        due_date__lte=one_week_from_now
+    ).order_by('due_date').distinct()
+    
+    # Build a list of tasks with their associated projects
+    upcoming_tasks = []
+    for task in upcoming_tasks_qs:
+        task_projects = Project.objects.filter(tasks=task, id__in=user_projects)
+        if task_projects.exists():
+            # Use the first project (usually there's only one)
+            upcoming_tasks.append({
+                'task': task,
+                'project_name': task_projects.first().name
+            })
+    
     return render(request, 'dashboard.html', {
         'username': username,
         'projects': projects,
         'shared_projects': shared_projects,
+        'upcoming_tasks': upcoming_tasks,
     })
 
 def login(request):
@@ -123,22 +148,19 @@ def project_detail(request, project_id):
 
         if action == 'add_post':
             message = request.POST.get('message', '').strip()
-            image_url = request.POST.get('image_url', '').strip()
+            image_file = request.FILES.get('image', None)
 
-            if not message and not image_url:
-                messages.error(request, "Add a message or image URL before posting.")
+            if not message and not image_file:
+                messages.error(request, "Add a message or image before posting.")
             else:
-                content = message
-                if image_url:
-                    content = f"IMAGE:{image_url}"
-                    if message:
-                        content += f"\n{message}"
-
-                Comment.objects.create(
+                comment = Comment.objects.create(
                     user=request.user,
                     project=project,
-                    content=content,
+                    content=message,
                 )
+                if image_file:
+                    comment.image = image_file
+                    comment.save()
                 messages.success(request, "Board post added.")
                 return redirect('project_detail', project_id=project.id)
 
@@ -235,20 +257,11 @@ def project_detail(request, project_id):
     comments_raw = Comment.objects.filter(project=project).order_by('-timestamp')
     comments = []
     for comment in comments_raw:
-        content = comment.content or ''
-        image_url = None
-        text = content
-
-        if content.startswith('IMAGE:'):
-            parts = content[6:].split('\n', 1)
-            image_url = parts[0].strip()
-            text = parts[1].strip() if len(parts) > 1 else ''
-
         comments.append({
             'author': comment.user,
             'timestamp': comment.timestamp,
-            'text': text,
-            'image_url': image_url,
+            'text': comment.content or '',
+            'image': comment.image,
         })
 
     shared_users = project.shared_with.all()
