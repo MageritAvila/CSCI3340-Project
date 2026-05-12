@@ -240,6 +240,18 @@
 
     <div class="section">
         <h2>Upcoming Tasks</h2>
+        <div style="margin-bottom: 20px;">
+            <a href="{% url 'dashboard' username %}?filter=all" 
+               class="badge" 
+               style="{% if task_filter == 'all' %}background: #5a8cff; color: white;{% else %}background: rgba(255, 255, 255, 0.08);{% endif %} margin-right: 10px;">
+               All Tasks
+            </a>
+            <a href="{% url 'dashboard' username %}?filter=claimed" 
+               class="badge" 
+               style="{% if task_filter == 'claimed' %}background: #5a8cff; color: white;{% else %}background: rgba(255, 255, 255, 0.08);{% endif %}">
+               My Tasks
+            </a>
+        </div>
         <ul class="project-list">
             {% for item in upcoming_tasks %}
                 <li class="project-item">
@@ -254,7 +266,13 @@
                     {% endif %}
                 </li>
             {% empty %}
-                <li class="no-projects">No upcoming tasks due within the next week.</li>
+                <li class="no-projects">
+                    {% if task_filter == 'claimed' %}
+                        No tasks that you claimed are due within the next week.
+                    {% else %}
+                        No upcoming tasks due within the next week.
+                    {% endif %}
+                </li>
             {% endfor %}
         </ul>
     </div>
