@@ -6,7 +6,7 @@
     body {
         margin: 0;
         font-family: Arial, sans-serif;
-        background: linear-gradient(rgba(12, 34, 56, 0.75), rgba(12, 34, 56, 0.75)), url("{% static 'images/pexels-icon0-479444.jpg' %}") center/cover no-repeat;
+        background: linear-gradient(rgba(12, 34, 56, 0.75), rgba(12, 34, 56, 0.75)), url('{% static "images/pexels-icon0-479444.jpg" %}') center/cover no-repeat;
         min-height: 100vh;
         color: #eef3ff;
     }
@@ -101,6 +101,7 @@
     .project-item h3 {
         margin: 0 0 10px;
         font-size: 20px;
+        color: #eef3ff;
     }
 
     .project-item p {
@@ -188,7 +189,7 @@
 
 <div class="dashboard-content">
 
-    <div class ="logOut">
+    <div class="logOut">
     <a href="{% url 'home' %}" class="badge">Logout</a>
     </div>
 
